@@ -9,26 +9,26 @@ head(DroughtStrategies)
 #
 head(df.PhenotypesCount) #From G2P Figures script
 
-HowDeal <- NULL # Create an empty object to populate with count data
+StrategyType <- NULL # Create an empty object to populate with count data
 
 # Loop over the lexicon and search for these words in consensus abstract phenotypes
 for (i in 1:nrow(df.PhenotypesCount)) {
-  HowDeal[i] <- Drought_Lexicon_Long_V2$Area[df.PhenotypesCount$Phenotypes.Name[i] == Drought_Lexicon_Long_V2$Phrase]
+  StrategyType[i] <- Drought_Lexicon_Long_V2$Area[df.PhenotypesCount$Phenotypes.Name[i] == Drought_Lexicon_Long_V2$Phrase]
 }
-head(HowDeal)
-df.PhenoStrats <- data.frame(df.PhenotypesCount, HowDeal)
+head(StrategyType)
+df.PhenoStrats <- data.frame(df.PhenotypesCount, StrategyType)
 head(df.PhenoStrats)
 #
 
 #
-HowDeal <- c("Avoidance", "Recovery", "Tolerance", "General Stress", "Detection", "Escape")
+StrategyType <- c("Avoidance", "Recovery", "Tolerance", "General Stress", "Detection", "Escape")
 Total <- NULL
-for (i in 1:length(HowDeal)) {
-  tmp <- df.PhenoStrats[grep(pattern = HowDeal[i], x = df.PhenoStrats$HowDeal),]
+for (i in 1:length(StrategyType)) {
+  tmp <- df.PhenoStrats[grep(pattern = StrategyType[i], x = df.PhenoStrats$StrategyType),]
   Total[i] <- sum(tmp$Phenotypes.Count)
 }
 Total
-df <- data.frame(HowDeal, Total)
+df <- data.frame(StrategyType, Total)
 head(df)
 write.csv(x = df, file = "DroughtPhenoWordStrategy_Counts.csv", row.names = F)
 #

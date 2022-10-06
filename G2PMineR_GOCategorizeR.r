@@ -8,10 +8,10 @@ write.csv(x = AllCatGeneCounts[order(-AllCatGeneCounts$as.numeric.Gene.Count.),]
 
 AllCatGeneDF <- GenesCon[which(GenesCon$Gene %in% AllCategoryList),]
 
-# OK! First, let's spearate each string so that there is one GO cat per entry
+# OK! First, let's separate each string so that there is one GO cat per entry
 LetsGOOOO.stringy <- unlist(strsplit(AllCatGeneDF$Ontology, ";", fixed = TRUE))
 
-# OK! Next, let's get rid of all the word stuff!
+# OK! Next, let's get rid of everything that';s not a GO categor!
 #
 LetsGOOOO <- data.frame(unlist(str_extract_all(LetsGOOOO.stringy, "\\[GO:[0-9]{7}\\]", simplify = FALSE)))
 head(LetsGOOOO)
@@ -24,5 +24,5 @@ length(unique(LetsGOOOO$GO_Number))
 
 write.csv(x = sort(table(LetsGOOOO$GO_Number), decreasing = T), file = "GOCat_AllCatGenes_Counts.csv", row.names = F)
 
-hist(sort(table(LetsGOOOO$GO_Number),decreasing = T))
+hist(sort(table(LetsGOOOO$GO_Number),decreasing = T)) # Generate a histogram of GO category counts
 

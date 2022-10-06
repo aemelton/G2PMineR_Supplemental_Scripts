@@ -145,5 +145,5 @@ Intersect <- function (x) {
   }
 }
 
-AllCategoryList <- Intersect(x)
+AllCategoryList <- Intersect(x) # This will identify genes that occur in all strategy lists.
 write.csv(AllCategoryList, "AllCategoryList.csv", row.names = F)

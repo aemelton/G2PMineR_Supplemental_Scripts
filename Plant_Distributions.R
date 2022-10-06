@@ -2,24 +2,27 @@
 # Script for downloading occurrence data for plants lacking use per Kew plant list and
 # identifying which plants occur in particular environments (i.e., hyper-arid)
 
-### Distribution stuff for USELESS plants
+### Distribution stuff for plants lacking human use
 library(spocc)
 library(dplyr)
 library(readr)
 
-setwd("Occurrence_Data/")
+setwd("Occurrence_Data/") # Create a folder to store downloaded occurrence data
 
+# These functions should be downloaded to be used with this script
 source("GetOccurrenceData.R")
 source("GetGBIFKeys.R")
 source("GetGBIFOccurrences.R")
 
+# Input is an object containing the names of species you are interested in querying for.
 GetOccurrenceData(usr.query = Useless$Species, usr.db = c("gbif", "idigbio"), usr.how = "shortest")
-# The previous command generates a "raw" data csv and a curated data csv. Use the raw to
-# generate a gbif DOI and the curated for further analysis.
+
+# The previous command generates a "raw" data csv and a curated data csv. Use the raw to generate a gbif DOI and the curated for further analysis.
+
 GetGBIFKeys() # Get the Keys to the all downloaded GBIF data. Use these to generate a GBIF derived dataset DOI 
 GetGBIFOccurrences() # Get just the data from GBIF so it can be set aside and cited as a derived dataset
 
-
+# Generate one large csv file with all downloaded species data
 QC.files <- list.files(pattern = "PrelimQCd_Data.csv", full.names = TRUE)  %>% 
   lapply(read_csv) %>% 
   bind_rows 
@@ -32,7 +35,7 @@ write.csv(x = QC.files, file = "USELESS_PLANTS_PrelimQCd_Data.csv", row.names = 
 
 # Further QC the curated data csv
 occ.dat <- read.csv(file = "USELESS_PLANTS_PrelimQCd_Data.csv")
-rastey <- raster("30s_Env_Data/AI_and_PET/ai_et0/ai_et0.tif") # Identify coordinated lacking environmental data
+rastey <- raster("30s_Env_Data/AI_and_PET/ai_et0/ai_et0.tif") # Identify coordinates lacking environmental data
 occ.dat.Extract <- raster::extract(rastey, occ.dat[,2:3])
 occ.dat.Extract <- cbind(occ.dat, occ.dat.Extract)
 clean_occ.dat.Extract <- occ.dat.Extract[complete.cases(occ.dat.Extract$occ.dat.Extract),]
@@ -125,5 +128,5 @@ HypAridOccCounts$Species <- gsub(x = HypAridOccCounts$Species, replacement = " "
 UselessPlants <- read.csv("Useless_Plants.csv")
 
 HypAridOccCounts$Species %in% UselessPlants$Species # Check the "usefulness" of each hyper
-# arid species per Kew list. Ok, all the Hyper Arids are Useless. Cool.
+# arid species per Kew list. Ok, all the Hyper Arids are species that lack human use per Kew list.
 #
